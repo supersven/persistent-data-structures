@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" href="css/reveal.css">
+    <link rel="stylesheet" href="css/theme/white.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.14.0/vis.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.14.0/vis.min.js"></script>
+    <style type="text/css">
+        #mynetwork {
+            width: 300px;
+            height: 300px;
+            border: 1px solid lightgray;
+        }
+    </style>
+</head>
+<body>
+<div class="reveal">
+    <div class="slides">
+        <section data-markdown>
+            <script type="text/template">
+                ## Persistent Data Structures
+                ### Purely Functional Data Structures
+                Sven Tennie (sven.tennie@dreamit.de)
+            </script>
+        </section>
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Problem: Mutability
+                    ```
+                    var foo = [1,2,3]
+
+                    veryComplex(foo);
+
+                    console.log(foo)
+                    ```
+
+                    - Did veryComplex() change foo?
+                    - Can't know without understanding veryComplex()s code ...
+                        + slows down development ("developer time is money")
+                        + might lead to headache and frustration (especially when veryComplex() modifies foo only in rare special cases)
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Solution
+                    Make EVERYTHING immutable
+                    - if foo is immutable I don't have to care
+                </script>
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Problem: Multi-Threading
+                    When at least two threads read and write to the same data structure trouble is inevitable:
+                    - must understand all threads to make assumptions
+                    - unimaginable behaviour (e.g. half written values) might appear
+                    - when there are data structures for concurrency in the language, I must carefully choose them (and read the fine print)
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Problem: Multi-Threading (Language Implementors View)
+                    - hard to make sure everything works as expected
+                    - CPU Pipelines and Caches come into play
+                    - Every kind of CPU-Lock is evil in our massive multi core future
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Solution
+                    Make EVERYTHING immutable
+                    - CPU loves stable data
+                    - No locking is needed
+                    - I don't have to care what other peoples threads do
+                    - Language Implementors can sleep at night, because they could even prove their code correct
+                </script>
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Problem: EVERYTHING is immutable
+                    - All updates produce complete new copies, right?
+                    - expensive in runtime
+                    - expensive in memory
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## NO!
+                    And that's what persistent data structures are about
+                    - share as much as possible to make immutability cheap!
+                </script>
+            </section>
+        </section>
+        <section>
+            <section>
+                <h1>Singly Linked List</h1>
+                <ul>
+                    <li>
+                        simplest example
+                    </li>
+                </ul>
+                <div id="mynetwork"></div>
+                <script type="text/javascript">
+                    // create an array with nodes
+                    var nodes = new vis.DataSet([
+                        {id: 1, label: '0'},
+                        {id: 2, label: '1'},
+                        {id: 3, label: '2'}
+                    ]);
+
+                    // create an array with edges
+                    var edges = new vis.DataSet([
+                        {from: 1, to: 2},
+                        {from: 2, to: 3}
+                    ]);
+
+                    // create a network
+                    var container = document.getElementById('mynetwork');
+                    var data = {
+                        nodes: nodes,
+                        edges: edges
+                    };
+                    var options = {};
+                    var network = new vis.Network(container, data, options);
+                </script>
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Vector
+                </script>
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## O-Notation
+                </script>
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    # Mori
+                    -
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    # Immutable JS
+                    Make EVERYTHING immutable
+                </script>
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    # The Value of Values
+                    <iframe width="854" height="480" src="https://www.youtube.com/embed/-6BsiVyC1kM" frameborder="0"
+                            allowfullscreen></iframe>
+                    - Philosophical talk by Rich Hickey (inventor of Clojure)
+                </script>
+            </section>
+        </section>
+    </div>
+</div>
+<script src="lib/js/head.min.js"></script>
+<script src="js/reveal.js"></script>
+<script>
+    // Full list of configuration options available at:
+    // https://github.com/hakimel/reveal.js#configuration
+    Reveal.initialize({
+        controls: true,
+        progress: true,
+        history: true,
+        center: true,
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        // Optional reveal.js plugins
+        dependencies: [
+            {
+                src: 'lib/js/classList.js', condition: function () {
+                return !document.body.classList;
+            }
+            },
+            {
+                src: 'plugin/markdown/marked.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: 'plugin/markdown/markdown.js', condition: function () {
+                return !!document.querySelector('[data-markdown]');
+            }
+            },
+            {
+                src: 'plugin/highlight/highlight.js', async: true, callback: function () {
+                hljs.initHighlightingOnLoad();
+            }
+            },
+            {src: 'plugin/zoom-js/zoom.js', async: true},
+            {src: 'plugin/notes/notes.js', async: true}
+        ]
+    });
+</script>
+</body>
+</html>
