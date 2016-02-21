@@ -19,6 +19,9 @@
         </section>
         <section>
             <section>
+                <h1>Mutability</h1>
+            </section>
+            <section>
                     <h2>Mutability: Hidden Complexity</h2>
                     <pre>
                     <code>
@@ -47,8 +50,6 @@
                     - if foo is immutable I don't have to care
                 </script>
             </section>
-        </section>
-        <section>
             <section data-markdown>
                 <script type="text/template">
                     ## Mutability: Multi-Threading
@@ -65,7 +66,7 @@
                     - Mutexes and Locks might lead to Deadlocks and Starvation
                     - hard to make sure everything works as expected
                     - CPU Pipelines and Caches come into play
-                    - Every kind of CPU-Lock is evil in our massive multi core future
+                    - every kind of Lock is evil in our massive multi core future
                 </script>
             </section>
             <section data-markdown>
@@ -73,13 +74,11 @@
                     ## Solution
                     Make EVERYTHING immutable
                     - CPU loves stable data
-                    - No locking is needed
+                    - no locking is needed
                     - I don't have to care what other peoples threads do
-                    - Language Implementors can sleep at night, because they could even prove their code correct
+                    - language implementors can sleep at night - could even <strong>prove</strong> their code correct
                 </script>
             </section>
-        </section>
-        <section>
             <section data-markdown>
                 <script type="text/template">
                     ## Problem: EVERYTHING is immutable
@@ -97,16 +96,19 @@
             </section>
         </section>
         <section>
+            <section>
+                <h1>Big O Notation</h1>
+            </section>
             <section data-markdown>
                 <script type="text/template">
-                    ## O-Notation
+                    ## Big O Notation
                     - limiting behaviour (towards infinity)
                     - hardware independent rule of thumb for the performance of an algorithm
                     - good for approximating how well operations behave for large data sets
                 </script>
             </section>
             <section>
-                <h2>O-Notation</h2>
+                <h2>Big O Notation</h2>
                     <table>
                         <tr>
                             <td>O(1)</td>
@@ -137,13 +139,14 @@
             </section>
         </section>
         <section>
+            <section><h1>Singly Linked List</h1></section>
             <section data-markdown>
                 <script type="text/template">
                     ## Singly Linked List
                     - simplest example
-                    - original list structure intact after:
-                        + appending
-                        + removing from front
+                    - rest of list intact after:
+                        + prepend to first element
+                        + removing first element
                 </script>
             </section>
             <section>
@@ -153,7 +156,7 @@
                     <li>prepend to empty list</li>
                     <li>O(1)</li>
                     <li>Functional Jargon: Cons-Cell, Consing</li>
-                    <li>from Lisps <code>(cons 'A' nil)</code></li>
+                    <li>from Lisp's <code>(cons 'A' nil)</code></li>
                     <li>Haskell has a Cons-Operator <code>'A' : []</code></li>
                 </ul>
             </section>
@@ -202,6 +205,7 @@
             </section>
         </section>
         <section>
+            <section><h1>Vector</h1></section>
             <section data-markdown>
                 <script type="text/template">
                     ## Vector
@@ -228,7 +232,7 @@
                 <li>get(0): 0 -> 0 -> 0</li>
                 <li>get(1): 0 -> 0 -> 1</li>
                 <li>get(5): 1 -> 1 -> 1</li>
-                <li>n = 8 (slots); 3 steps</li>
+                <li>n = 7; 8 slots; 3 steps</li>
                 <li>2^3 = 8 -> log2(8) = 3</li>
                 <li>O(log2(n))</li>
             </ul>
@@ -240,17 +244,16 @@
                 <li>create 1 layer 1 node</li>
                 <li>create 1 layer 2 node</li>
                 <li>create value layer 2 node</li>
-                <li>n = 8; 3 steps</li>
-                <li>2^3 = 8 -> log2(8) = 3</li>
+                <li>n = 7; 8 slots; 3 steps</li>
+                <li>2³ = 8 -> log2(8) = 3</li>
                 <li>O(log2(n))</li>
             </ul>
         </section>
             <section data-markdown>
             <script type="text/template">
                 ## Other Operations
-                - insert: O(log2(n))
                 - prepend: O(log2(n))
-                - remove: O(log2(n))
+                - remove or insert (middle) might become expensive!
             </script>
             </section>
             <section data-markdown>
@@ -259,11 +262,12 @@
                 - many implementations use arrays of size 32
                 - Operations become O(log32(n))
                 - almost O(1): signed integer 2^31 positive values, log32(2^31) = 7
-                - additional tricks possible
+                - additional tricks possible: e.g. pointers to head and tail
             </script>
             </section>
         </section>
         <section>
+            <section><h1>Libraries</h1></section>
             <section data-markdown>
                 <script type="text/template">
                     # Mori
@@ -356,29 +360,7 @@
             </section>
         </section>
         <section>
-            <section data-markdown>
-                <script type="text/template">
-                    # Clojure
-                    - all build-in data structures persistent
-                    - references exchanged via transactions
-                </script>
-            </section>
-            <section data-markdown>
-                <script type="text/template">
-                    # Haskell
-                    - everything immutable
-                </script>
-            </section>
-        </section>
-        <section>
-            <section data-markdown>
-                <script type="text/template">
-                    # The Value of Values
-                    <iframe width="854" height="480" src="https://www.youtube.com/embed/-6BsiVyC1kM" frameborder="0"
-                            allowfullscreen></iframe>
-                    - Philosophical talk by Rich Hickey (inventor of Clojure)
-                </script>
-            </section>
+            <h1>Thank you!</h1>
         </section>
     </div>
 </div>
