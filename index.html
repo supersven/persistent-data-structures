@@ -4,15 +4,8 @@
     <meta charset="UTF-8"/>
     <link rel="stylesheet" href="css/reveal.css">
     <link rel="stylesheet" href="css/theme/white.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis/4.14.0/vis.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.14.0/vis.min.js"></script>
-    <style type="text/css">
-        #mynetwork {
-            width: 300px;
-            height: 300px;
-            border: 1px solid lightgray;
-        }
-    </style>
+    <link rel="stylesheet" href="css/function-plot.css">
+    <link rel="stylesheet" href="lib/css/zenburn.css">
 </head>
 <body>
 <div class="reveal">
@@ -25,22 +18,27 @@
             </script>
         </section>
         <section>
-            <section data-markdown>
-                <script type="text/template">
-                    ## Problem: Mutability
-                    ```
-                    var foo = [1,2,3]
+            <section>
+                    <h2>Mutability: Hidden Complexity</h2>
+                    <pre>
+                    <code>
+                        var foo = [1,2,3]
 
-                    veryComplex(foo);
+                        veryComplex(foo);
 
-                    console.log(foo)
-                    ```
-
-                    - Did veryComplex() change foo?
-                    - Can't know without understanding veryComplex()s code ...
-                        + slows down development ("developer time is money")
-                        + might lead to headache and frustration (especially when veryComplex() modifies foo only in rare special cases)
-                </script>
+                        console.log(foo)
+                    </code>
+                    </pre>
+                <ul>
+                    <li> Did veryComplex() change foo?</li>
+                    <li> Can't know without understanding veryComplex()s code ...
+                        <ul>
+                            <li>slows down development ("developer time is money")</li>
+                            <li>might lead to headache and frustration
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
             </section>
             <section data-markdown>
                 <script type="text/template">
@@ -53,7 +51,7 @@
         <section>
             <section data-markdown>
                 <script type="text/template">
-                    ## Problem: Multi-Threading
+                    ## Mutability: Multi-Threading
                     When at least two threads read and write to the same data structure trouble is inevitable:
                     - must understand all threads to make assumptions
                     - unimaginable behaviour (e.g. half written values) might appear
@@ -62,7 +60,9 @@
             </section>
             <section data-markdown>
                 <script type="text/template">
-                    ## Problem: Multi-Threading (Language Implementors View)
+                    ## Multi-Threading
+                    ### (Language Implementors View)
+                    - Mutexes and Locks might lead to Deadlocks and Starvation
                     - hard to make sure everything works as expected
                     - CPU Pipelines and Caches come into play
                     - Every kind of CPU-Lock is evil in our massive multi core future
@@ -84,8 +84,8 @@
                 <script type="text/template">
                     ## Problem: EVERYTHING is immutable
                     - All updates produce complete new copies, right?
-                    - expensive in runtime
-                    - expensive in memory
+                        + expensive in runtime
+                        + expensive in memory
                 </script>
             </section>
             <section data-markdown>
@@ -97,64 +97,276 @@
             </section>
         </section>
         <section>
-            <section>
-                <h1>Singly Linked List</h1>
-                <ul>
-                    <li>
-                        simplest example
-                    </li>
-                </ul>
-                <div id="mynetwork"></div>
-                <script type="text/javascript">
-                    // create an array with nodes
-                    var nodes = new vis.DataSet([
-                        {id: 1, label: '0'},
-                        {id: 2, label: '1'},
-                        {id: 3, label: '2'}
-                    ]);
-
-                    // create an array with edges
-                    var edges = new vis.DataSet([
-                        {from: 1, to: 2},
-                        {from: 2, to: 3}
-                    ]);
-
-                    // create a network
-                    var container = document.getElementById('mynetwork');
-                    var data = {
-                        nodes: nodes,
-                        edges: edges
-                    };
-                    var options = {};
-                    var network = new vis.Network(container, data, options);
+            <section data-markdown>
+                <script type="text/template">
+                    ## O-Notation
+                    - limiting behaviour (towards infinity)
+                    - hardware independent rule of thumb for the performance of an algorithm
+                    - good for approximating how well operations behave for large data sets
                 </script>
+            </section>
+            <section>
+                <h2>O-Notation</h2>
+                    <table>
+                        <tr>
+                            <td>O(1)</td>
+                            <td>constant</td>
+                            <td>one step</td>
+                        </tr>
+                        <tr>
+                            <td>O(n)</td>
+                            <td>linear</td>
+                            <td>one step per element</td>
+                        </tr>
+                        <tr>
+                            <td>O(n²)</td>
+                            <td>cubic</td>
+                            <td>n steps per element</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <nobr>O(log n)</nobr>
+                            </td>
+                            <td>log function</td>
+                            <td>more steps only if n was multiplied!</td>
+                        </tr>
+                    </table>
+            </section>
+            <section>
+                <div id="quadratic"></div>
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    ## Singly Linked List
+                    - simplest example
+                    - original list structure intact after:
+                        + appending
+                        + removing from front
+                </script>
+            </section>
+            <section>
+                <img class="stretch" align="left" src="img/singly-linked-list_0.svg">
+                <h2>Create List</h2>
+                <ul>
+                    <li>prepend to empty list</li>
+                    <li>O(1)</li>
+                    <li>Functional Jargon: Cons-Cell, Consing</li>
+                    <li>from Lisps <code>(cons 'A' nil)</code></li>
+                    <li>Haskell has a Cons-Operator <code>'A' : []</code></li>
+                </ul>
+            </section>
+            <section>
+                        <img class="stretch" align="left" src="img/singly-linked-list_1.svg">
+                        <h2>Prepend Elements</h2>
+                        <ul>
+                            <li>each step O(1)</li>
+                        </ul>
+            </section>
+            <section>
+            <img class="stretch" align="left" src="img/singly-linked-list_2.svg">
+                <h2>Prepend Element</h2>
+                <ul>
+                    <li>someone else adds to C</li>
+                    <li>original list not changed</li>
+                </ul>
+            </section>
+            <section>
+            <img class="stretch" align="left" src="img/singly-linked-list_3.svg">
+                <h2>Remove First Element</h2>
+                <ul>
+                    <li>someone removes from C</li>
+                    <li>original list not changed</li>
+                    <li>O(1)</li>
+                </ul>
+            </section>
+            <section>
+            <img class="stretch" align="left" src="img/singly-linked-list_4.svg">
+                <h2>Remove and Add Elements</h2>
+                <ul>
+                    <li>someone removes from C</li>
+                    <li>adds to the result (B)</li>
+                    <li>original list not changed</li>
+                </ul>
+            </section>
+            <section>
+                    <h2> Singly Linked List</h2>
+                <ul>
+                    <li> is a stack</li>
+                    <li> appending (<code>push</code>) to front O(1)</li>
+                    <li> removing (<code>pop</code>) first element O(1)</li>
+                    <li> search by index <code>get(i)</code> <strong>O(n)</strong> (Ouch!)</li>
+                    <li> insert somewhere <strong>O(n)</strong> (Ouch!)</li>
+                </ul>
             </section>
         </section>
         <section>
             <section data-markdown>
                 <script type="text/template">
                     ## Vector
+                    - smarter data structure
+                    - replacement for the singly linked list
+                    - based on trees (tries)
                 </script>
             </section>
+        <section>
+            <img class="stretch" src="img/tree_0.svg" align="left"/>
+            <ul>
+                <li>List: (A, B, C, D, E, F, G)</li>
+                <li>red: root-node with size</li>
+                <li>size(): O(1) instead of O(n)</li>
+                <li>green: inner-nodes</li>
+                <li>yellow: arrays</li>
+                <li>value nodes at the bottom</li>
+            </ul>
         </section>
         <section>
+            <img class="stretch" src="img/tree_0.svg" align="left"/>
+            <h2>Get</h2>
+            <ul>
+                <li>get(0): 0 -> 0 -> 0</li>
+                <li>get(1): 0 -> 0 -> 1</li>
+                <li>get(5): 1 -> 1 -> 1</li>
+                <li>n = 8 (slots); 3 steps</li>
+                <li>2^3 = 8 -> log2(8) = 3</li>
+                <li>O(log2(n))</li>
+            </ul>
+        </section>
+            <section>
+            <img class="stretch" src="img/tree_1.svg" align="left"/>
+                <h2>Append</h2>
+                <ul>
+                <li>create 1 layer 1 node</li>
+                <li>create 1 layer 2 node</li>
+                <li>create value layer 2 node</li>
+                <li>n = 8; 3 steps</li>
+                <li>2^3 = 8 -> log2(8) = 3</li>
+                <li>O(log2(n))</li>
+            </ul>
+        </section>
             <section data-markdown>
-                <script type="text/template">
-                    ## O-Notation
-                </script>
+            <script type="text/template">
+                ## Other Operations
+                - insert: O(log2(n))
+                - prepend: O(log2(n))
+                - remove: O(log2(n))
+            </script>
+            </section>
+            <section data-markdown>
+            <script type="text/template">
+                ## real life™
+                - many implementations use arrays of size 32
+                - Operations become O(log32(n))
+                - almost O(1): signed integer 2^31 positive values, log32(2^31) = 7
+                - additional tricks possible
+            </script>
             </section>
         </section>
         <section>
             <section data-markdown>
                 <script type="text/template">
                     # Mori
-                    -
+                    - wrapper around ClojureScript
+                    - nice when you know clojure
+                    - only function calls - not "object-oriented" (if that means methods on objects)
+                    - hard to read error messages
                 </script>
+            </section>
+            <section>
+                    <h2>Mori</h2>
+                    <ul><li>Collections
+                    <ul>
+                        Maps,
+                        Vectors,
+                        Lists,
+                        Sets
+                    </ul>
+                    </li>
+                    <li>Sequences
+                    <ul>
+                        <li>
+                            Sequential view of Collections and computation results
+                        </li>
+                        <li> can be lazy</li>
+                        <li>for <code>map(), reduce(), filter(), each()</code> et. al.</li>
+                    </ul>
+                    </li>
+                        <li>Helpers
+                        <ul>
+                            <li>e.g. currying</li>
+                        </ul>
+                        </li>
+                    </ul>
+            </section>
+            <section>
+                <pre>
+                <code>
+                    var mori = require("mori");
+
+                    var dream = mori.vector('d', 'r', 'e', 'a', 'm');
+                    var bream = mori.assoc(dream, 0, 'b');
+                    var dreamIT = mori.conj(dream, 'I', 'T');
+
+                    console.log(dream);
+                    console.log(bream);
+                    console.log(dreamIT);
+                </code>
+                </pre>
+                <pre>
+                <code>
+                    ["d" "r" "e" "a" "m"]
+                    ["b" "r" "e" "a" "m"]
+                    ["d" "r" "e" "a" "m" "I" "T"]
+                </code>
+                </pre>
             </section>
             <section data-markdown>
                 <script type="text/template">
                     # Immutable JS
-                    Make EVERYTHING immutable
+                    - Facebooks Persistent Data Structures
+                    - more javascripty (methods are called on objects)
+                    - Good documentation
+                    - strong influence from Clojure (but more common naming)
+                    - List, Stack, Map, OrderedMap, Set, OrderedSet and Record
+                    - Lazy Sequences and helpers for Range and Repeat
+                </script>
+            </section>
+            <section>
+                <pre>
+                <code>
+                    var List = require("immutable").List;
+
+                    var dream = List.of('d', 'r', 'e', 'a', 'm');
+                    var bream = dream.set(0, 'b');
+                    var dreamIT = dream.concat(List.of('I', 'T'));
+
+                    console.log(dream);
+                    console.log(bream);
+                    console.log(dreamIT);
+                </code>
+                </pre>
+                <pre>
+                <code>
+                    List [ "d", "r", "e", "a", "m" ]
+                    List [ "b", "r", "e", "a", "m" ]
+                    List [ "d", "r", "e", "a", "m", "I", "T" ]
+                </code>
+                </pre>
+            </section>
+        </section>
+        <section>
+            <section data-markdown>
+                <script type="text/template">
+                    # Clojure
+                    - all build-in data structures persistent
+                    - references exchanged via transactions
+                </script>
+            </section>
+            <section data-markdown>
+                <script type="text/template">
+                    # Haskell
+                    - everything immutable
                 </script>
             </section>
         </section>
@@ -170,12 +382,16 @@
         </section>
     </div>
 </div>
+
+
 <script src="lib/js/head.min.js"></script>
 <script src="js/reveal.js"></script>
 <script>
     // Full list of configuration options available at:
     // https://github.com/hakimel/reveal.js#configuration
     Reveal.initialize({
+        width: 1366,
+        height: 786,
         controls: true,
         progress: true,
         history: true,
@@ -208,5 +424,31 @@
         ]
     });
 </script>
+<script src="https://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<script src="https://wzrd.in/standalone/function-plot@1.16.3"></script>
+
+<script language="JavaScript">
+    functionPlot({
+        target: '#quadratic',
+        width: 600,
+        height: 600,
+        zoom: true,
+        xAxis: {
+            label: 'elements - n',
+            domain: [0, 40]
+        },
+        yAxis: {
+            label: 'operations - O(n)',
+            domain: [0, 40]
+        },
+        data: [{
+            fn: 'x^2', range: [0, 40]
+        }, {fn: 'x', range: [0, 40]}, {fn: 'log(x)', range: [0, 40]}, {
+            fn: 'log10(x)/log10(32)',
+            range: [0, 40]
+        }, {fn: '1', range: [0, 40]}]
+    });
+    </script>
+
 </body>
 </html>
